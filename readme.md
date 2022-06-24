@@ -12,7 +12,7 @@ Special thanks to Milo Montuori for helping me.
 
 ## API
 
-- Get all notes of a user
+- Get all notes of a student
 
 ## Run the app
 

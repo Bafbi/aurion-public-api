@@ -321,8 +321,4 @@ export async function getAllNote(email, password) {
     }
 }
 
-// if (import.meta.isMain) {
-//     console.log(
-//         await getAllNote("nathan.eudeline@student.junia.com", "tu8#BeW7")
-//     );
-// }
+// console.log(await getAllNote("nathan.eudeline@student.junia.com", "tu8#BeW7"));
