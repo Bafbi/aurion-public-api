@@ -321,4 +321,6 @@ export async function getAllNote(email, password) {
     }
 }
 
-// console.log(await getAllNote("nathan.eudeline@student.junia.com", "tu8#BeW7"));
+// import * as dotenv from "dotenv";
+// dotenv.config();
+// console.log(await getAllNote(process.env.USERNAME, process.env.PASSWORD));

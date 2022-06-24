@@ -5,14 +5,14 @@ const axios = require("axios").default;
 var XMLHttpRequest = require("xmlhttprequest").XMLHttpRequest;
 
 const siteUrl = "https://aurion.junia.com/";
-const sessionId = getSessionId("nathhmn@gmail.com", "s6KyMHQKgNHVsJp");
+const sessionId = getSessionId("", "");
 console.log(sessionId);
 
 function getSessionId(username, password) {
     axios
         .post(`${siteUrl}login`, {
-            username: "nathan.eudeline@student.junia.com",
-            password: "tu8%23BeW7",
+            username: "",
+            password: "",
         })
         .then(function (response) {
             //console.log(response);

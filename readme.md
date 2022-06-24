@@ -7,24 +7,30 @@ The api is made using node with expressjs, the api simply made all requests to a
 Special thanks to Milo Montuori for helping me.
 
 ---
->Currently host : qdqdq
 
+> Current host : http://village-neuf.eu:18999/
+
+---
+
+> License : [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 
 ## API
 
-- Get all notes of a student
+-   Get all notes of a student
 
 ## Run the app
 
     npm start
 
 ---
+
 # REST API
 
 The REST API is used as show below.
 
 ---
->Currently host : qdqdq
+
+> Currently host : http://village-neuf.eu:18999/
 
 ## Get notes
 
@@ -32,12 +38,12 @@ The REST API is used as show below.
 
 `GET /note/`
 
-    curl -X GET http://localhost:3000/note/  
+    curl -X GET http://localhost:3000/note/
     -H "Authorization: Basic <base64(email:password)>"
 
 or
 
-    curl -X GET http://localhost:3000/note/?username=<URLencode(email)>&password=<URLencode(password)> 
+    curl -X GET http://localhost:3000/note/?username=<URLencode(email)>&password=<URLencode(password)>
 
 ### Response
 
@@ -58,8 +64,8 @@ or
 
 `POST /note/`
 
-    curl -X POST http://localhost:3000/note/  
-    -H "Content-Type: application/json"  
+    curl -X POST http://localhost:3000/note/
+    -H "Content-Type: application/json"
     -d "{\"username\":\"<email>\", \"password\":\"<password>\"}"
 
 ### Response
