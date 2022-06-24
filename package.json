@@ -1,0 +1,17 @@
+{
+    "name": "aurion-public-api",
+    "version": "1.0.0",
+    "description": "An public api for aurion",
+    "main": "api.js",
+    "scripts": {
+        "start": "node api.js"
+    },
+    "keywords": [],
+    "author": "",
+    "license": "ISC",
+    "type": "module",
+    "dependencies": {
+        "axios": "^0.21.4",
+        "express": "^4.18.1"
+    }
+}
