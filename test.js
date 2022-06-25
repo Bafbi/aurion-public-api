@@ -5,7 +5,7 @@ async function login(email, password) {
     try {
         const response = await axios.post(
             "https://aurion.junia.com/login",
-            "username=nathan.eudeline%40student.junia.com+&password=tu8%23BeW7&j_idt28=",
+            "username=aaa+&password=aaa&j_idt28=",
             {
                 headers: {
                     "Content-type": "application/x-www-form-urlencoded",
@@ -27,7 +27,7 @@ async function login(email, password) {
 
 /*
 const payload =
-    "username=nathan.eudeline%40student.junia.com+&password=tu8%23BeW7&j_idt28=";
+    "username=aaa+&password=aaa&j_idt28=";
 const options = {
     hostname: "aurion.junia.com",
     path: "/login",
