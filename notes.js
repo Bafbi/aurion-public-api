@@ -6,7 +6,7 @@ import url from "node:url";
 //     try {
 //         const response = await axios.post(
 //             "https://aurion.junia.com/login",
-//             "username=nathan.eudeline%40student.junia.com+&password=tu8%23BeW7&j_idt28=",
+//             "username=aaa+&password=aaa&j_idt28=",
 //             {
 //                 headers: {
 //                     "Content-type": "application/x-www-form-urlencoded",
@@ -321,8 +321,6 @@ export async function getAllNote(email, password) {
     }
 }
 
-// if (import.meta.isMain) {
-//     console.log(
-//         await getAllNote("nathan.eudeline@student.junia.com", "tu8#BeW7")
-//     );
-// }
+// import * as dotenv from "dotenv";
+// dotenv.config();
+// console.log(await getAllNote(process.env.USERNAME, process.env.PASSWORD));
