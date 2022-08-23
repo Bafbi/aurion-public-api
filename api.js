@@ -4,7 +4,6 @@ import { getAllNote } from "./notes.js";
 const app = express();
 app.use(express.json());
 const port = process.env.PORT || 3000;
-
 app.get("/", (req, res) => {
     res.send("Hello World!");
 });
@@ -32,8 +31,9 @@ app.route("/note")
             const notes = await getAllNote(email, password);
             res.json(notes);
         } catch (error) {
-            console.log(error);
-            res.status(402).send("Invalid credentials");
+            // console.log(error);
+            console.log("enable to fetch notes for " + user);
+            res.status(402).send(error.message);
         }
     })
     .post(async (req, res) => {

@@ -44,11 +44,14 @@ function login(email, password) {
             // console.log(`statusCode: ${res.statusCode}`);
             // console.log(`headers: ${JSON.stringify(res.headers)}`);
 
-            resolve(res.headers["set-cookie"][0].split(";")[0].split("=")[1]);
-        });
+            resolve([
+                res.headers["set-cookie"][0].split(";")[0].split("=")[1],
+                res.statusCode,
+            ]);
 
-        req.on("error", (error) => {
-            console.error(error);
+            res.on("error", (error) => {
+                console.error(error);
+            });
         });
 
         req.write(payload);
@@ -70,6 +73,9 @@ function parseNote(body) {
     // note structure {date: ..., code: ..., epreuve: ..., note: ..., coefficient: ...}
     // one note <span class="preformatted ">29/03/2022</span></td><td role="gridcell" class=""><span class="preformatted ">2122_ISEN_CIR1_S2_ELEC_TP8_3</span></td><td role="gridcell" class=""><span class="preformatted ">Evaluation du TP 8</span></td><td role="gridcell" class=""><span class="preformatted ">  5.00</span></td><td role="gridcell" class=""><span class="preformatted ">1</span></td>
     const noteRows = body.match(/<tr[^>]*>([\s\S]*?)<\/tr>/g);
+    if (noteRows === null) {
+        throw new Error("No note found");
+    }
     const notes = noteRows.map((row) => {
         const note = {};
         const cells = row.match(/<td[^>]*>([\s\S]*?)<\/td>/g);
@@ -182,7 +188,7 @@ async function postMainSidebar(viewState, sessionId) {
 
 async function postMainSidebarNote(viewState, sessionId) {
     // use this payload : 'form=form&form%3AlargeurDivCenter=615&form%3Asauvegarde=&form%3Aj_idt772_focus=&form%3Aj_idt772_input=44323&javax.faces.ViewState=-5056887933331458699%3A-891539684155069079&form%3Asidebar=form%3Asidebar&form%3Asidebar_menuid=3_1'
-    const menuId = "3_1";
+    const menuId = process.env.AURION_NOTE_MENUID || "4_1";
     const res = await axios.post(
         "https://aurion.junia.com/faces/MainMenuPage.xhtml",
         new url.URLSearchParams({
@@ -270,6 +276,7 @@ async function getNoteViewState(sessionId) {
 
 async function postNote(viewState, sessionId) {
     const payload = `javax.faces.partial.ajax=true&javax.faces.source=form%3Aj_idt181&javax.faces.partial.execute=form%3Aj_idt181&javax.faces.partial.render=form%3Aj_idt181&form%3Aj_idt181=form%3Aj_idt181&form%3Aj_idt181_pagination=true&form%3Aj_idt181_first=0&form%3Aj_idt181_rows=1000&form%3Aj_idt181_skipChildren=true&form%3Aj_idt181_encodeFeature=true&form=form&form%3AlargeurDivCenter=615&form%3AmessagesRubriqueInaccessible=&form%3Asearch-texte=&form%3Asearch-texte-avancer=&form%3Ainput-expression-exacte=&form%3Ainput-un-des-mots=&form%3Ainput-aucun-des-mots=&form%3Ainput-nombre-debut=&form%3Ainput-nombre-fin=&form%3AcalendarDebut_input=&form%3AcalendarFin_input=&form%3Aj_idt181_reflowDD=0_0&form%3Aj_idt181%3Aj_idt186%3Afilter=&form%3Aj_idt181%3Aj_idt188%3Afilter=&form%3Aj_idt181%3Aj_idt190%3Afilter=&form%3Aj_idt181%3Aj_idt192%3Afilter=&form%3Aj_idt181%3Aj_idt194%3Afilter=&form%3Aj_idt181%3Aj_idt196%3Afilter=&form%3Aj_idt254_focus=&form%3Aj_idt254_input=44323&javax.faces.Viewstate=${viewState}`;
+    // const payload = `javax.faces.partial.ajax=true&javax.faces.source=form%3Aj_idt181&javax.faces.partial.execute=form%3Aj_idt181&javax.faces.partial.render=form%3Aj_idt181&form%3Aj_idt181=form%3Aj_idt181&form%3Aj_idt181_pagination=true&form%3Aj_idt181_first=0&form%3Aj_idt181_rows=1000&form%3Aj_idt181_skipChildren=true&form%3Aj_idt181_encodeFeature=true&form=form&form%3AlargeurDivCenter=615&form%3AmessagesRubriqueInaccessible=&form%3Asearch-texte=&form%3Asearch-texte-avancer=&form%3Ainput-expression-exacte=&form%3Ainput-un-des-mots=&form%3Ainput-aucun-des-mots=&form%3Ainput-nombre-debut=&form%3Ainput-nombre-fin=&form%3AcalendarDebut_input=&form%3AcalendarFin_input=&form%3Aj_idt181_reflowDD=0_0&form%3Aj_idt181%3Aj_idt186%3Afilter=&form%3Aj_idt181%3Aj_idt188%3Afilter=&form%3Aj_idt181%3Aj_idt190%3Afilter=&form%3Aj_idt181%3Aj_idt192%3Afilter=&form%3Aj_idt181%3Aj_idt194%3Afilter=&form%3Aj_idt181%3Aj_idt196%3Afilter=&form%3Aj_idt254_focus=&form%3Aj_idt254_input=44323&javax.faces.Viewstate=8051578216813041337:8575334377865406983`;
 
     const options = {
         hostname: "aurion.junia.com",
@@ -278,6 +285,7 @@ async function postNote(viewState, sessionId) {
         headers: {
             "Content-Type": "application/x-www-form-urlencoded",
             Cookie: `JSESSIONID=${sessionId}`,
+            // Cookie: `JSESSIONID=A9BD76D79D296A19723D55B27EA49205`,
         },
     };
 
@@ -302,8 +310,14 @@ async function postNote(viewState, sessionId) {
 }
 
 export async function getAllNote(email, password) {
-    const sessionId = await login(email, password);
+    // console.log(password);
+    const res = await login(email, password);
+    if (res[1] !== 302) {
+        throw new Error("Login failed");
+    }
+    const sessionId = res[0];
     // console.log(sessionId);
+    // const sessionId = "29E60FB5421435A15EF8199ABFC89F51";
 
     let viewState = await getViewState("https://aurion.junia.com/", sessionId);
     // console.log(`main viewState: ${viewState}`);
@@ -313,14 +327,14 @@ export async function getAllNote(email, password) {
     viewState = await postMainSidebarNote(viewState, sessionId);
     // console.log(`note viewState: ${viewState}`);
 
+    // viewState = await getNoteViewState(viewState, sessionId);
+    // console.log(`note viewState: ${viewState}`);
+
     const notes = await postNote(viewState, sessionId);
+    // console.log(notes);
     try {
         return parseNote(notes);
     } catch (error) {
-        return new Error(error);
+        throw error;
     }
 }
-
-// import * as dotenv from "dotenv";
-// dotenv.config();
-// console.log(await getAllNote(process.env.USERNAME, process.env.PASSWORD));
